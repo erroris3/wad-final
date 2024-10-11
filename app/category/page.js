@@ -75,7 +75,7 @@ export default function Home() {
         <div className="flex-1 w-64 ">
 
           <form onSubmit={handleSubmit(handleCategoryFormSubmit)}>
-            <div className="grid grid-cols-2 gap-4 w-fit m-4">
+            <div className="grid grid-cols-2 gap-4 m-4 w-fit">
               <div>Category:</div>
               <div>
                 <input
@@ -99,14 +99,14 @@ export default function Home() {
                   <input
                     type="submit"
                     value="Update"
-                    className="bg-blue-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                    className="px-4 py-2 font-bold text-white bg-blue-800 rounded-full hover:bg-blue-700"
                   />
 
                   :
                   <input
                     type="submit"
                     value="Add"
-                    className="bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+                    className="px-4 py-2 font-bold text-white bg-green-800 rounded-full hover:bg-green-700"
                   />
                 }
                 {
@@ -116,14 +116,14 @@ export default function Home() {
                       reset({ name: '', order: '' })
                       setEditMode(false)
                     }}
-                    className="ml-2 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full"
+                    className="px-4 py-2 ml-2 font-bold text-white bg-gray-800 rounded-full hover:bg-gray-700"
                   >Cancel</button>
                 }
               </div>
             </div>
           </form>
         </div>
-        <div className="border m-4 bg-slate-300 flex-1 w-64">
+        <div className="flex-1 w-64 m-4 border bg-slate-300">
 
 
           <ul>

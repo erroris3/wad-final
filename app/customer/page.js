@@ -6,28 +6,28 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const APIBASE = process.env.NEXT_PUBLIC_API_URL;
   const { register, handleSubmit, reset } = useForm();
-  const [products, setProducts] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [editMode, setEditMode] = useState(false);
 
-  const startEdit = (product) => async () => {
+  const startEdit = (customer) => async () => {
     setEditMode(true);
-    reset(product);
+    reset(customer);
   };
 
-  async function fetchProducts() {
-    const data = await fetch(`${APIBASE}/abc/xyz`);
+  async function fetchCustomers() {
+    const data = await fetch(`${APIBASE}/customer`);
     const p = await data.json();
-    const p2 = p.map((product) => {
-      product.id = product._id;
-      return product;
+    const p2 = p.map((customer) => {
+      customer.id = customer._id;
+      return customer;
     });
-    setProducts(p2);
+    setCustomers(p2);
   }
 
 
-  const createProductOrUpdate = async (data) => {
+  const createCustomerOrUpdate = async (data) => {
     if (editMode) {
-      const response = await fetch(`${APIBASE}/abc/xyz`, {
+      const response = await fetch(`${APIBASE}/customer`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -36,22 +36,22 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        alert(`Failed to update product: ${response.status}`);
+        alert(`Failed to update customer: ${response.status}`);
       }
-      alert("Product updated successfully");
+      alert("Customer updated successfully");
+
       reset({
-        code: "",
         name: "",
-        description: "",
-        price: "",
-        category: "",
+        dof: "",
+        memberid: "",
+        interests: "",
       });
       setEditMode(false);
-      fetchProducts();
+      fetchCustomers();
       return;
     }
 
-    const response = await fetch(`${APIBASE}/abc/xyz`, {
+    const response = await fetch(`${APIBASE}/customer`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,18 +65,17 @@ export default function Home() {
       }
 
       // const json = await response.json();
-      alert("Product added successfully");
+      alert("Customer added successfully");
 
       reset({
-        code: "",
         name: "",
-        description: "",
-        price: "",
-        category: "",
+        dof: "",
+        memberid: "",
+        interests: "",
       });
-      fetchProducts();
+      fetchCustomers();
     } catch (error) {
-      alert(`Failed to add product: ${error.message}`);
+      alert(`Failed to add customer: ${error.message}`);
       console.error(error);
     }
   };
@@ -84,37 +83,27 @@ export default function Home() {
   const deleteById = (id) => async () => {
     if (!confirm("Are you sure?")) return;
 
-    const response = await fetch(`${APIBASE}/abc/xyz${id}`, {
+    const response = await fetch(`${APIBASE}/customer/${id}`, {
       method: "DELETE",
     });
 
     if (!response.ok) {
-      alert(`Failed to delete product: ${response.status}`);
+      alert(`Failed to delete customer: ${response.status}`);
     }
-    alert("Product deleted successfully");
-    fetchProducts();
+    alert("Customer deleted successfully");
+    fetchCustomers();
   };
 
   useEffect(() => {
-    fetchCategory();
-    fetchProducts();
+    fetchCustomers();
   }, []);
 
   return (
     <>
       <div className="flex flex-row gap-4">
         <div className="flex-1 w-64 ">
-          <form onSubmit={handleSubmit(createProductOrUpdate)}>
+          <form onSubmit={handleSubmit(createCustomerOrUpdate)}>
             <div className="grid w-1/2 grid-cols-2 gap-4 m-4">
-              <div>Code:</div>
-              <div>
-                <input
-                  name="code"
-                  type="text"
-                  {...register("code", { required: true })}
-                  className="w-full border border-black"
-                />
-              </div>
               <div>Name:</div>
               <div>
                 <input
@@ -124,20 +113,30 @@ export default function Home() {
                   className="w-full border border-black"
                 />
               </div>
-              <div>Description:</div>
+              <div>Date of birth:</div>
               <div>
-                <textarea
-                  name="description"
-                  {...register("description", { required: false })}
+                <input
+                  name="dof"
+                  type="date"
+                  {...register("dof", { required: true })}
                   className="w-full border border-black"
                 />
               </div>
-              <div>Price:</div>
+              <div>Member Number:</div>
               <div>
                 <input
-                  name="name"
+                  name="memberid"
                   type="number"
-                  {...register("price", { required: true })}
+                  {...register("memberid", { required: true })}
+                  className="w-full border border-black"
+                />
+              </div>
+
+              <div>Interests:</div>
+              <div>
+                <textarea
+                  name="interest"
+                  {...register("interests", { required: false })}
                   className="w-full border border-black"
                 />
               </div>
@@ -158,7 +157,7 @@ export default function Home() {
                 {editMode && (
                   <button
                     onClick={() => {
-                      reset({ code: "", name: "", description: "", price: "", category: "" });
+                      reset({ name: "", dof: "", memberid: "", interests: "", });
                       setEditMode(false);
                     }}
                     className="px-4 py-2 ml-2 font-bold text-white bg-gray-800 rounded-full hover:bg-gray-700"
@@ -171,9 +170,9 @@ export default function Home() {
           </form>
         </div>
         <div className="flex-1 w-64 m-4 border bg-slate-300">
-          <h1 className="text-2xl">Products ({products.length})</h1>
+          <h1 className="text-2xl">Customers ({customers.length})</h1>
           <ul className="ml-8 list-disc">
-            {products.map((p) => (
+            {customers.map((p) => (
               <li key={p._id}>
                 <button className="border border-black p-1/2" onClick={startEdit(p)}>
                   📝
@@ -181,7 +180,7 @@ export default function Home() {
                 <button className="border border-black p-1/2" onClick={deleteById(p._id)}>
                   ❌
                 </button>{" "}
-                <Link href={`/abc/xyz/${p._id}`} className="font-bold">
+                <Link href={`/customer/${p._id}`} className="font-bold">
                   {p.name}
                 </Link>{" "}
                 - {p.description}

@@ -2,7 +2,7 @@ import Customer from "@/models/Customer";
 
 export async function GET(request, { params }) {
   const id = params.id;
-  const customer = await Customer.findById(id).populate("customer");
+  const customer = await Customer.findById(id)
   console.log({customer });
   return Response.json(customer);
 }
